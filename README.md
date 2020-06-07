@@ -1,13 +1,19 @@
 # megasync
 
-Run mega-sync as a Docker image
+Run [mega-sync](https://mega.nz/sync) as a Docker image
 
 ## Features
 
-## Install
+* Keeps your MEGASync directory in your Mega account in sync with the `/home/mega` directory in the container
 
-```sh
+## Usage
 
+```
+docker run -d \
+  -e EMAIL=YOUR_MEGA_ACCOUNT_EMAIL \
+  -e PASSWORD=YOUR_MEGA_PASSWORD \
+  -v /path/to/sync:/home/mega \
+  docker.cluster.fun/averagemarcus/megasync
 ```
 
 ## Building from source
@@ -25,6 +31,9 @@ make build
 ```
 
 ## Resources
+
+* [mega-sync](https://mega.nz/sync)
+* [MEGAcmd](https://github.com/meganz/MEGAcmd)
 
 ## Contributing
 
