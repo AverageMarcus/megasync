@@ -5,6 +5,7 @@ RUN curl -o megacmd-xUbuntu_19.10_amd64.deb https://mega.nz/linux/MEGAsync/xUbun
 RUN apt install -y ./megacmd-xUbuntu_19.10_amd64.deb
 
 ADD entrypoint.sh /
+RUN chmod +x /entrypoint.sh
 
 RUN adduser --disabled-password --gecos '' mega && adduser mega sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 USER mega
