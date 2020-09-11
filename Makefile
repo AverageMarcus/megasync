@@ -1,6 +1,9 @@
 .DEFAULT_GOAL := default
 
 IMAGE ?= docker.cluster.fun/averagemarcus/megasync:latest
+PLATFORMS ?= linux/amd64,linux/arm/v7
+
+export DOCKER_CLI_EXPERIMENTAL=enabled
 
 .PHONY: test # Run all tests, linting and format checks
 test: lint check-format run-tests
@@ -31,11 +34,20 @@ build: lint check-format fetch-deps
 
 .PHONY: docker-build # Build the docker image
 docker-build:
-	@docker build -t $(IMAGE) .
+	@docker buildx create --use --name=crossplat --node=crossplat && \
+	docker buildx build \
+		--output "type=docker,push=false" \
+		--tag $(IMAGE) \
+		.
 
 .PHONY: docker-publish # Push the docker image to the remote registry
 docker-publish:
-	@docker push $(IMAGE)
+	@docker buildx create --use --name=crossplat --node=crossplat && \
+	docker buildx build \
+		--platform $(PLATFORMS) \
+		--output "type=image,push=true" \
+		--tag $(IMAGE) \
+		.
 
 .PHONY: run # Run the application
 run:
