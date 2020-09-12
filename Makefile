@@ -51,6 +51,7 @@ docker-publish:
 docker-publish-arm:
 	@docker buildx create --use --name=crossplat --node=crossplat && \
 	docker buildx build \
+		--file Dockerfile.arm6 \
 		--output "type=image,push=true" \
 		--tag $(IMAGE)-armhf \
 		.
