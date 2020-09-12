@@ -1,7 +1,6 @@
 .DEFAULT_GOAL := default
 
 IMAGE ?= docker.cluster.fun/averagemarcus/megasync:latest
-PLATFORMS ?= linux/amd64,linux/arm/v7
 
 export DOCKER_CLI_EXPERIMENTAL=enabled
 
@@ -44,9 +43,16 @@ docker-build:
 docker-publish:
 	@docker buildx create --use --name=crossplat --node=crossplat && \
 	docker buildx build \
-		--platform $(PLATFORMS) \
 		--output "type=image,push=true" \
 		--tag $(IMAGE) \
+		.
+
+.PHONY: docker-publish-arm # Build and push the armhf image (needs to be built on ARM hardware)
+docker-publish-arm:
+	@docker buildx create --use --name=crossplat --node=crossplat && \
+	docker buildx build \
+		--output "type=image,push=true" \
+		--tag $(IMAGE)-armhf \
 		.
 
 .PHONY: run # Run the application
